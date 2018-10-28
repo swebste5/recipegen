@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>"Add_Recipe"</title>
+</head>
+<body>
+<form action="../../recipe/newRecipe/" method="post">
+
+    {% csrf_token %}
+
+
+    <br>
+    Recipe Name
+    <br>
+
+    {{form.recipeName}}
+
+    <br>
+    ingredient
+    <br>
+    {{form.ingredientOne}} {{form.measurementOne}} {{form.unitOne}}
+
+
+     <br>
+    ingredient
+    <br>
+    {{form.ingredientTwo}} {{form.measurementTwo}} {{form.unitTwo}}
+
+     <br>
+    ingredient
+    <br>
+    {{form.ingredientThree}} {{form.measurementThree}} {{form.unitThree}}
+
+    <br>
+
+    Recipe
+    {{form.recipeDescription}}
+
+
+    <input type="submit" value="Submit" />
+
+</form>
+
+</body>
+</html>
