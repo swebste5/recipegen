@@ -2,29 +2,35 @@ from django import forms
 
 
 class AddForm(forms.Form):
-    ingredient = []
-    measurement = []
-    unit = []
-    recipeName = forms.CharField(label='Name', max_length=100)
 
-    """for i in range(1, 5, 1):
-        ingredient.append(forms.CharField(label='Ingredient', max_length=100))
-        measurement.append(forms.CharField(label='Measurement', max_length=100))
-        unit.append(forms.CharField(label='Unit', max_length=100))"""
+    def __init__(self, *args, **kwargs):
+        #ingredients = kwargs.pop('ingredients')
 
-    ingredientOne=forms.CharField(label='Ingredient', max_length=100)
-    measurementOne=forms.CharField(label='Measurement', max_length=100)
-    unitOne = forms.CharField(label='Unit', max_length=100)
+        super(AddForm, self).__init__(*args, **kwargs)
+        counter = 1
+        #or q in ingredients:
+        self.fields['recipeName'] = forms.CharField(label='Name', max_length=100)
+        self.fields['recipeDescription'] = forms.CharField(widget=forms.Textarea)
+        for q in range(0, 100, 1):
+            self.fields['ingredient-' + str(counter)] = forms.CharField(label='Ingredient', max_length=100)
+            self.fields['measurement-' + str(counter)] = forms.CharField(label='Measurement', max_length=100)
+            self.fields['unit-' + str(counter)] = forms.CharField(label='Unit', max_length=100)
+            counter += 1
 
-    ingredientTwo = forms.CharField(label='Ingredient', max_length=100)
-    measurementTwo = forms.CharField(label='Measurement', max_length=100)
-    unitTwo= forms.CharField(label='Unit', max_length=100)
+    #ingredient = []
+    #measurement = []
+    #unit = []
 
-    ingredientThree = forms.CharField(label='Ingredient', max_length=100)
-    measurementThree = forms.CharField(label='Measurement', max_length=100)
-    unitThree = forms.CharField(label='Unit', max_length=100)
+        """for i in range(0, 100, 1):
+            ingredient.append(forms.CharField(label='Ingredient', max_length=100))
+             measurement.append(forms.CharField(label='Measurement', max_length=100))
+            unit.append(forms.CharField(label='Unit', max_length=100))"""
 
-    recipeDescription = forms.CharField(widget=forms.Textarea)
+
+
+
+
+
 
 
 

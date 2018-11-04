@@ -21,6 +21,9 @@ def list(request):
 def retrieve(request):
     return render(request, 'recipe/retrieve.html', {'form': RetrieveForm})
 
+def delete(request):
+    return render(request, 'recipe/delete.html', {'form': RetrieveForm})
+
 
 def newRecipe(request):
     form = AddForm(request.POST)
@@ -28,16 +31,17 @@ def newRecipe(request):
         """class for addming and maniplulating recipes. Don'think it really needs to be an object but meh."""
     #this needs looping, create dictionary for each ingredient, then roll the ingredients up into a list.
         lIngredients = []
-        item = {'ingredient':form.cleaned_data['ingredientOne'], 'measurement':form.cleaned_data['measurementOne'], 'unit':form.cleaned_data['unitOne']}
+        #item = {'ingredient':form.cleaned_data['ingredientOne'], 'measurement':form.cleaned_data['measurementOne'], 'unit':form.cleaned_data['unitOne']}
 
-        lIngredients.append(item)
+       # lIngredients.append(item)
 
-        item = {'ingredient': form.cleaned_data['ingredientOne'], 'measurement': form.cleaned_data['measurementOne'],
-                'unit': form.cleaned_data['unitOne']}
-        lIngredients.append(item)
+       # item = {'ingredient': form.cleaned_data['ingredientOne'], 'measurement': form.cleaned_data['measurementOne'],
+                #'unit': form.cleaned_data['unitOne']}
+       # lIngredients.append(item)
 
-        item = {'ingredient': form.cleaned_data['ingredientOne'], 'measurement': form.cleaned_data['measurementOne'],
-                'unit': form.cleaned_data['unitOne']}
+       # item = {'ingredient': form.cleaned_data['ingredientOne'], 'measurement': form.cleaned_data['measurementOne'],
+                #'unit': form.cleaned_data['unitOne']}
+        item = form.cleaned_data['recipeName']
         lIngredients.append(item)
         #supply recipe name to init
         recipe = recipeManager(form.cleaned_data['recipeName'])
@@ -67,3 +71,16 @@ def retrieveRecipe(request):
 
     else:
         return render(request, 'recipe/retrieve.html', {'form': RetrieveForm})
+
+
+def deleteRecipe(request):
+    #c delete the entry from db
+
+    form =RetrieveForm(request.POST)
+    if form.is_valid():
+        recipe = recipeManager(form.cleaned_data['recipeName'])
+        result = recipe.deleteRecipe()
+        if result == True:
+            return HttpResponse('deleted')
+
+        return HttpResponse('not deleted')

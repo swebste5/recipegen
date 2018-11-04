@@ -9,30 +9,15 @@
 
     {% csrf_token %}
 
+    
 
-    <br>
-    Recipe Name
-    <br>
+    {% for field in form %}
 
-    {{form.recipeName}}
-
+    {{ field.label }}
     <br>
-    ingredient
+    {{field}}
     <br>
-    {{form.ingredientOne}} {{form.measurementOne}} {{form.unitOne}}
-
-
-     <br>
-    ingredient
-    <br>
-    {{form.ingredientTwo}} {{form.measurementTwo}} {{form.unitTwo}}
-
-     <br>
-    ingredient
-    <br>
-    {{form.ingredientThree}} {{form.measurementThree}} {{form.unitThree}}
-
-    <br>
+    {% endfor %}
 
     Recipe
     {{form.recipeDescription}}

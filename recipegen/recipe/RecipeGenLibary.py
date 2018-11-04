@@ -19,6 +19,10 @@ class recipeManager(object):
 
     def retrieveRecipe(self):
         #retrieve reciple via named supplied by init or argument
+        result = self.getRecipeExists()
+        if result == False:
+            return False
+
         result= self.getRecipeShelve()
         if result:
             #packup attributes and return in a list. Could access directly from view but meh
@@ -31,9 +35,18 @@ class recipeManager(object):
         else:
             return False
 
-    #def deleteRecipe(self):
+    def deleteRecipe(self):
+        result = self.getRecipeExists()
+        if result == False:
+            return False
+        database = shelve.open('recipes')
+        del database[self.recipeName]
+
+        return True
+
 
     # delete reciple via named supplied by init or argument but only if ardgument and init match
+
 
 
     ###we need to access and retrieve from there outside of the object
@@ -73,7 +86,17 @@ class recipeManager(object):
         print(database[self.recipeName])
         database.close()
 
-
+    def getRecipeExists(self):
+        # pull file and except exception if problem
+        database = shelve.open('recipes')
+        try:
+            returnedRecipe=database[self.recipeName]
+        except KeyError:
+            print('key doesnt exist')
+            database.close()
+            return False
+        database.close()
+        return True
 
     def getRecipeShelve(self):
         #Use shelve as all of the recipes will be kept in single flat file
