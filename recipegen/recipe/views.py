@@ -12,7 +12,7 @@ Once that is done structure the data into a database of some sort
 Once that is done create the shopping list function"""
 
 def add(request):
-    return render(request, 'recipe/add.html', {'form': AddForm})
+    return render(request, 'recipe/add2.html', {'form': AddForm})
 
 def list(request):
     #list all recipes that match search pattern and display view button for each to display
@@ -25,10 +25,11 @@ def delete(request):
     return render(request, 'recipe/delete.html', {'form': RetrieveForm})
 
 
-def newRecipe(request):
+"""def newRecipe(request):
+old view for a django defined form
     form = AddForm(request.POST)
     if form.is_valid():
-        """class for addming and maniplulating recipes. Don'think it really needs to be an object but meh."""
+        class for addming and maniplulating recipes. Don'think it really needs to be an object but meh.
     #this needs looping, create dictionary for each ingredient, then roll the ingredients up into a list.
         lIngredients = []
         #item = {'ingredient':form.cleaned_data['ingredientOne'], 'measurement':form.cleaned_data['measurementOne'], 'unit':form.cleaned_data['unitOne']}
@@ -52,7 +53,27 @@ def newRecipe(request):
     else:
         return render(request, 'recipe/add.html', {'form': AddForm})
 
+"""
 
+
+def newRecipe(request):
+
+     #class for addming and maniplulating recipes. Don'think it really needs to be an object but meh.
+     #create dictionary for each ingredient, then roll the ingredients up into a list.
+    lIngredients = []
+    for i in range(int(request.POST['ingredient'])):
+        print(request.POST)
+        item = {'ingredient':request.POST['ingredient{}'.format(i)], 'measurement':request.POST['volume{}'.format(i)], 'unit':request.POST['metric{}'.format(i)]}
+        lIngredients.append(item)
+
+        #supply recipe name to init
+    recipe = recipeManager(request.POST['name'])
+    recipe.createRecipe(lIngredients, request.POST['instructions'])
+
+    return render(request, 'recipe/add2.html')
+
+    #else:
+     #   return render(request, 'recipe/add.html', {'form': AddForm})
 
 def retrieveRecipe(request):
     #return the recipe details and display on web page

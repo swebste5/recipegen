@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>"Add_Recipe"</title>
+</head>
+<body>
+
+
+    {% csrf_token %}
+<script type='text/javascript'>
+    function addFields(){
+            // Number of inputs to create
+            var number = document.getElementById("ingredient").value;
+            // Container <div> where dynamic content will be placed
+            var container = document.getElementById("container");
+            // Clear previous contents of the container
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+            for (i=0;i<number;i++){
+                // Append a node with a random text
+                container.appendChild(document.createTextNode("ingredient" + (i+1)));
+
+                // Create an <input> element, set its type and name attributes
+
+                var input = document.createElement("input");
+                input.type = "text";
+                input.name = "ingredient" + i;
+                container.appendChild(input);
+
+                // Append a node with a random text
+
+                container.appendChild(document.createTextNode("volume" + (i+1)));
+
+                // Create an <input> element, set its type and name attributes
+                var volume_input = document.createElement("input");
+                volume_input.type = "text";
+                volume_input.name = "volume" + i;
+                container.appendChild(volume_input);
+
+                // Append a node with a random text
+
+                container.appendChild(document.createTextNode("metric" + (i+1)));
+
+
+                // Create an <input> element, set its type and name attributes
+                var metric_input = document.createElement("input");
+                metric_input.type = "text";
+                metric_input.name = "metric" + i;
+                container.appendChild(metric_input);
+
+                // Append a line break
+                container.appendChild(document.createElement("br"));
+            }
+        }
+       addFields()
+    </script>
+
+    <form action="../../recipe/newRecipe/" method="post">
+        {% csrf_token %}
+
+     Recipe Name <input type ="text" id="name" name="name" value="" ><br />
+        Recipe Instructions
+    <textarea name="instructions" id='instructions' cols="40" rows="5"></textarea>  <br />
+    <input type="submit" value="Submit" />
+     <input type="text" id="ingredient" name="ingredient" value="">Number of Ingredients: (max. 100)<br />
+
+
+    <a href="#" id="filldetails" onclick="addFields()">Fill Details</a>
+    <div id="container"/>
+
+
+
+</form>
+
+</body>
+</html>
