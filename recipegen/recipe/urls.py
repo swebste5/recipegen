@@ -6,6 +6,7 @@ from django.conf.urls import url, include
 app_name = "recipe"
 urlpatterns = [
 #ex: /form to add new recipe
+	url(r'^$', views.index, name='index'),
  	url(r'^add/$', views.add, name='add'),
 	url(r'^newRecipe/$', views.newRecipe, name='newRecipe'),
 	url(r'^retrieve/$', views.retrieve, name='retrieve'),

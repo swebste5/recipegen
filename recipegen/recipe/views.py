@@ -11,6 +11,14 @@ Then make the add page dynamic so there is no limit to number of ingredients
 Once that is done structure the data into a database of some sort
 Once that is done create the shopping list function"""
 
+def index(request):
+    #link to add delete and list, display initial list of recipes
+    recipe = recipeManager('list')
+    result = recipe.getRecipeList()
+    template = loader.get_template('recipe/index.html')
+    context = {'recipeList': result}
+    return HttpResponse(template.render(context, request))
+
 def add(request):
     return render(request, 'recipe/add2.html', {'form': AddForm})
 
@@ -25,35 +33,6 @@ def delete(request):
     return render(request, 'recipe/delete.html', {'form': RetrieveForm})
 
 
-"""def newRecipe(request):
-old view for a django defined form
-    form = AddForm(request.POST)
-    if form.is_valid():
-        class for addming and maniplulating recipes. Don'think it really needs to be an object but meh.
-    #this needs looping, create dictionary for each ingredient, then roll the ingredients up into a list.
-        lIngredients = []
-        #item = {'ingredient':form.cleaned_data['ingredientOne'], 'measurement':form.cleaned_data['measurementOne'], 'unit':form.cleaned_data['unitOne']}
-
-       # lIngredients.append(item)
-
-       # item = {'ingredient': form.cleaned_data['ingredientOne'], 'measurement': form.cleaned_data['measurementOne'],
-                #'unit': form.cleaned_data['unitOne']}
-       # lIngredients.append(item)
-
-       # item = {'ingredient': form.cleaned_data['ingredientOne'], 'measurement': form.cleaned_data['measurementOne'],
-                #'unit': form.cleaned_data['unitOne']}
-        item = form.cleaned_data['recipeName']
-        lIngredients.append(item)
-        #supply recipe name to init
-        recipe = recipeManager(form.cleaned_data['recipeName'])
-        recipe.createRecipe(lIngredients, form.cleaned_data['recipeDescription'])
-
-        return render(request, 'recipe/add.html', {'form': AddForm})
-
-    else:
-        return render(request, 'recipe/add.html', {'form': AddForm})
-
-"""
 
 
 def newRecipe(request):
@@ -62,15 +41,18 @@ def newRecipe(request):
      #create dictionary for each ingredient, then roll the ingredients up into a list.
     lIngredients = []
     for i in range(int(request.POST['ingredient'])):
+        #ingredient is the number of ingredients
         print(request.POST)
         item = {'ingredient':request.POST['ingredient{}'.format(i)], 'measurement':request.POST['volume{}'.format(i)], 'unit':request.POST['metric{}'.format(i)]}
         lIngredients.append(item)
 
         #supply recipe name to init
+    print(len(lIngredients))
     recipe = recipeManager(request.POST['name'])
-    recipe.createRecipe(lIngredients, request.POST['instructions'])
-
-    return render(request, 'recipe/add2.html')
+    if recipe.createRecipe(lIngredients, request.POST['instructions']) == True:
+        return render(request, 'recipe/add2.html')
+    else:
+        return HttpResponse('could not add recipe')
 
     #else:
      #   return render(request, 'recipe/add.html', {'form': AddForm})
@@ -78,6 +60,7 @@ def newRecipe(request):
 def retrieveRecipe(request):
     #return the recipe details and display on web page
     form = RetrieveForm(request.POST)
+    print(request.POST)
     if form.is_valid():
         recipe = recipeManager(form.cleaned_data['recipeName'])
         returnedRecipe = recipe.retrieveRecipe()
@@ -86,7 +69,9 @@ def retrieveRecipe(request):
             returnedName = returnedRecipe[0]
             returnedDescription = returnedRecipe[1]
             returnedIngredients = returnedRecipe[2]
-            return HttpResponse('{}<br>{}<br>{}br'.format(returnedName, returnedDescription, returnedIngredients))
+            context = {'returnedName':returnedName, 'returnedDescription': returnedDescription, 'returnedIngredients':returnedIngredients}
+            template = loader.get_template('recipe/result.html')
+            return HttpResponse(template.render(context, request))
         else:
             return HttpResponse('could not find recipe')
 
@@ -102,6 +87,12 @@ def deleteRecipe(request):
         recipe = recipeManager(form.cleaned_data['recipeName'])
         result = recipe.deleteRecipe()
         if result == True:
-            return HttpResponse('deleted')
+            returnedRecipe = recipe.retrieveRecipe()
+            if returnedRecipe:
+                return HttpResponse('not deleted')
+            else:
+                template = loader.get_template('recipe/delete.html')
+                context = {'isDeleted': True}
+                return HttpResponse(template.render(context, request))
 
         return HttpResponse('not deleted')

@@ -14,7 +14,10 @@ class recipeManager(object):
         #recipe ingredients is a list of dictionaries, one for each ingredient
 
         #self.storeRecipeJson(self.recipeName, self.recipeIngredients, self.recipeDescription )
-        self.storeRecipeShelve()
+        if self.storeRecipeShelve() == True:
+            return True
+        else:
+            return False
 
 
     def retrieveRecipe(self):
@@ -36,6 +39,7 @@ class recipeManager(object):
             return False
 
     def deleteRecipe(self):
+        print('deleting recipe with{}'.format(self.recipeName))
         result = self.getRecipeExists()
         if result == False:
             return False
@@ -46,6 +50,21 @@ class recipeManager(object):
 
 
     # delete reciple via named supplied by init or argument but only if ardgument and init match
+
+
+    def getRecipeList(self):
+        #return the names of all recipes
+        returnedRecipeList = []
+        database = shelve.open('recipes')
+        for i in database.items():
+            print(i)
+            returnedRecipe = i[0]
+            returnedRecipeList.append(returnedRecipe)
+        database.close()
+        return returnedRecipeList
+
+
+
 
 
 
@@ -76,7 +95,7 @@ class recipeManager(object):
 
     def storeRecipeShelve(self):
         #Use shelve as all of the recipes will be kept in single flat file
-
+        print('adding recipe')
         database = shelve.open('recipes')
         #supply the full object to shelf?
         database[self.recipeName]= self
@@ -85,8 +104,10 @@ class recipeManager(object):
 
         print(database[self.recipeName])
         database.close()
+        return True
 
     def getRecipeExists(self):
+        print('searching for recipe with {}'.format(self.recipeName))
         # pull file and except exception if problem
         database = shelve.open('recipes')
         try:
@@ -99,6 +120,7 @@ class recipeManager(object):
         return True
 
     def getRecipeShelve(self):
+        print('reteiving recipe with{}'.format(self.recipeName))
         #Use shelve as all of the recipes will be kept in single flat file
         #big guess here but retrieve the object in shelf and make self= it to override. then return the attributes of it
         database = shelve.open('recipes')
